@@ -4,7 +4,7 @@
 
 ### 180 Day challenge
 
-<em>A public build log of learning Python from zero and turning it into real, working, breakable systems — data tools, security scanners, and eventually a full AI powered risk platform.</em>
+<em>A public build log of learning Python from zero and turning it into real, working, breakable systems data tools, security scanners, and eventually a full AI powered risk platform.</em>
 
 <br>
 

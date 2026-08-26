@@ -1,3 +1,4 @@
+
 # Python Forge — 180 Days of Building
 
 I'm learning Python from the ground up by building something small, real, and slightly broken every single day. This repo is the public log of that journey.

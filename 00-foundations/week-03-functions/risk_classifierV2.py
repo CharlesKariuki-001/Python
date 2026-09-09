@@ -1,7 +1,7 @@
 #Risk_ClassifierV2
 
 def get_amount_score(amount):
-    if amount > 1000:
+    if amount > 10000:
         return 3
     elif amount > 1000:
         return 1

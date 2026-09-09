@@ -1,10 +1,10 @@
 <div align="center">
 
-# Python 
+# Python
 
-### 180 Day challenge
+### 180 Day Build Log
 
-<em>A public build log of learning Python from zero and turning it into real, working, breakable systems data tools, security scanners, and eventually a full AI powered risk platform.</em>
+<em>A public record of learning Python from zero and turning it into real, working systems: data tools, security scanners, and deep comprehension work on a live AI product I already built and shipped.</em>
 
 <br>
 
@@ -21,7 +21,7 @@
 
 ## What This Is
 
-This repository is a public, ongoing record of a 180 day journey from an empty Python file to real engineering skill. Every entry here is something that actually runs, something I deliberately tried to break, and something I learned from not a tutorial copy, not a certificate screenshot. Real code, real bugs, real fixes.
+This repository is a public, ongoing record of a 180 day journey from an empty Python file to real engineering skill. Every entry here is something that actually runs, something I deliberately tried to break, and something I learned from. Not a tutorial copy, not a certificate screenshot. Real code, real bugs, real fixes.
 
 The mission is simple. By the end of this journey I should be able to open a blank file and build something that works, understand exactly why it works, and know how to make it fail on purpose so I understand its limits.
 
@@ -29,7 +29,7 @@ The mission is simple. By the end of this journey I should be able to open a bla
 
 ## The Method
 
-Every single build in this repository follows the same four step cycle, without exception.
+Every build in this repository follows the same four step cycle, without exception.
 
 **Learn** a concept in small, focused pieces rather than everything at once.
 
@@ -47,15 +47,25 @@ This repository moves through six major phases, each one built on top of the las
 
 **Python Foundations** — going from a blank file to confident, clean, working code. Variables, control flow, functions, data structures, and the first real command line tools.
 
-**Intermediate Engineering** — file handling, error handling, object oriented design, APIs, and a reusable Python library built from scratch.
+**Intermediate Engineering** — file handling, error handling, object oriented design, and a reusable Python library built from scratch.
 
 **Data and Mathematics** — NumPy, Pandas, visualization, and just enough statistics, probability, and linear algebra to understand what is actually happening inside a machine learning model.
 
-**AI and Machine Learning Engineering** — training real classifiers, evaluating them honestly instead of trusting a misleading accuracy number, and building an explainability layer so predictions come with real reasons.
+**AI and Machine Learning Engineering** — training and evaluating a classifier honestly, on a fresh problem, then applying that understanding directly to a real system I already built, reading it, testing it, and proving I can explain every decision it makes.
 
-**Cybersecurity and AI Security** — thinking like both an attacker and a defender, secure coding practices, threat modeling, and adversarial testing of my own AI systems.
+**Cybersecurity and AI Security** — thinking like both an attacker and a defender. Secure coding, threat modeling, and adversarial testing, extending into two dedicated projects: a network security system and an AI security toolkit.
 
-**Production and Systems** — wrapping everything in a real API, giving it a database, containerizing it with Docker, and shipping a final capstone platform that ties every phase together.
+**Production and Systems** — deploying new tools with Docker, and closing the loop with a final report that ties every phase together across every project I have running.
+
+<br>
+
+## How This Connects
+
+This repository is the workshop, not the whole picture. General skills are learned and built here, one week at a time.
+
+Vigilant AI is a separate, already built and deployed product: an AI powered fraud detection system. It is not rebuilt inside this repository. Instead, this repo holds a weekly comprehension log, where I explain one real piece of it in my own words, and any hardening work (adversarial testing, security review) lives directly inside its own repository.
+
+Two more projects open later in this journey. A network security system and an AI security toolkit, each with its own repository, each starting only once the roadmap reaches that phase.
 
 <br>
 

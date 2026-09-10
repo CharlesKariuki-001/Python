@@ -63,6 +63,17 @@ Ship target: SentinelCLI refactor
 - [x] Verified identical behavior against all Week 4/5 sample files
 - [x] README updated with refactor note
 
+## Week 7 (Oct 26–Nov 1) — Modules, Packages, venv
+Theme: Modules, packages, venv
+Ship target: `projects/forgekit/`
+- [x] `notes.md` written — modules, packages, __init__.py, imports, __name__ == "__main__", venv
+- [x] `practice.py` completed
+- [x] ForgeKit package built — validators, formatters, file_tools modules
+- [x] `demo.py` verified working — imports package correctly from outside
+- [x] `conftest.py` added to fix pytest's ModuleNotFoundError
+- [x] All 6 tests passing
+- [x] README written
+
 
 | Week | Theme | Status |
 |---|---|---|
@@ -73,4 +84,5 @@ Ship target: SentinelCLI refactor
 | 4 | Collections — SentinelCLI | Complete and shipped |
 | 5 | Errors, exceptions, debugging | Complete |
 | 6 | OOP — SentinelCLI refactor | Complete |
+| 7 | Modules, packages, venv — ForgeKit | Complete |
 ---

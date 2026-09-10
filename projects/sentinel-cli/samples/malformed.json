@@ -1,0 +1,4 @@
+[
+  {"user": "alice", "action": "login", "status": "success"},
+  {"user": "bob", "action": "login", "status": "failed"}
+]

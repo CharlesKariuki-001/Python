@@ -1,11 +1,35 @@
 """
-SentinelCLI — a small command-line tool that inspects a file and tells you
-what's inside it, without you having to open it manually.
+SentinelCLI — a small command-line tool that inspects a file and reports
+what is inside it without requiring the user to open it manually.
 
-Supports three file types:
-  - CSV   → reports row count, column count, and header names
-  - JSON  → reports whether the data is a list or a dictionary, plus shape
-  - TXT/LOG → counts lines and scans for suspicious keywords
+Week 6 OOP Refactor:
+    SentinelCLI has been reorganized from separate analysis functions
+    into a FileInspector class.
+
+Supported file types:
+    CSV      → reports rows, columns, headers, and row inconsistencies
+    JSON     → reports list, dictionary, or single-value structure
+    TXT/LOG  → counts lines and scans for suspicious keywords
+
+Week 5 hardening retained:
+    Defensive programming
+    File existence validation
+    Permission error handling
+    File reading error handling
+    CSV structure validation
+    Invalid JSON handling
+    Empty file handling
+
+Week 6 OOP concepts applied:
+    Class
+    Object
+    self
+    __init__
+    Instance attributes
+    Methods
+    Encapsulation
+    Public method
+    Internal/private methods by convention
 
 Usage:
     python sentinel.py path/to/file.csv
@@ -18,11 +42,17 @@ import csv
 import json
 import os
 
-# ── SETTINGS ─────────────────────────────────────────────────
-# A SET, not a list — because we're checking "is this word in here?"
-# thousands of times as we scan a file. Sets make that check fast,
-# no matter how big the set gets. This is the Week 4 collections
-# lesson applied for real.
+
+# ============================================================
+# SETTINGS
+# ============================================================
+
+# A SET is used because SentinelCLI repeatedly checks whether
+# words belong to this collection.
+#
+# Sets provide efficient membership testing and also allow
+# useful operations such as intersection (&).
+
 SUSPICIOUS_WORDS = {
     "error",
     "failed",
@@ -35,152 +65,426 @@ SUSPICIOUS_WORDS = {
 }
 
 
-# ── CSV HANDLING ─────────────────────────────────────────────
-def analyze_csv(filepath):
+# ============================================================
+# FILE INSPECTOR CLASS
+# ============================================================
+
+class FileInspector:
     """
-    Reads a CSV file and reports its shape: how many rows, how many
-    columns, and what the column headers are.
+    Represents one file that SentinelCLI is going to inspect.
+
+    The object stores the filepath and its extension as instance
+    attributes. The public analyze() method decides what type of
+    analysis is required, while the internal analysis methods
+    perform the actual work.
+
+    This structure applies the Week 6 OOP lesson by keeping
+    related data and behavior together.
     """
-    with open(filepath, "r", encoding="utf-8", newline="") as f:
-        reader = csv.reader(f)
-        rows = list(reader)  # turn the whole file into a LIST of rows
 
-    if not rows:
-        # An empty file — handle it cleanly instead of crashing later
-        # when we try to read rows[0].
-        print("This CSV file is empty. No headers, no rows.")
-        return
+    def __init__(self, filepath):
+        """
+        Set up a FileInspector object.
 
-    headers = rows[0]          # first row = column names
-    data_rows = rows[1:]       # everything after that = the actual data
+        self.filepath:
+            Stores the path belonging to this particular object.
 
-    # A TUPLE, because this shape shouldn't change once we've measured it.
-    file_shape = (len(data_rows), len(headers))
+        self.extension:
+            Stores the normalized file extension.
+        """
+        self.filepath = filepath
 
-    print(f"File type: CSV")
-    print(f"Rows: {file_shape[0]}")
-    print(f"Columns: {file_shape[1]}")
-    print(f"Headers: {headers}")
+        _, extension = os.path.splitext(filepath)
+        self.extension = extension.lower()
+
+    # ========================================================
+    # PUBLIC METHOD
+    # ========================================================
+
+    def analyze(self):
+        """
+        Analyze the file using the appropriate internal method.
+
+        This is the main public method of the FileInspector class.
+        Code using the class does not need to know whether the
+        file is CSV, JSON, TXT, or LOG.
+        """
+
+        # ----------------------------------------------------
+        # FILE EXISTENCE VALIDATION
+        # ----------------------------------------------------
+
+        if not os.path.exists(self.filepath):
+            print(f"File not found: {self.filepath}")
+            return
+
+        # ----------------------------------------------------
+        # FILE TYPE ROUTING
+        # ----------------------------------------------------
+
+        if self.extension == ".csv":
+            self._analyze_csv()
+
+        elif self.extension == ".json":
+            self._analyze_json()
+
+        elif self.extension in (".txt", ".log"):
+            self._analyze_text()
+
+        else:
+            print(
+                "Unrecognized or missing file extension: "
+                f"'{self.extension or '(none)'}'"
+            )
+            print(
+                "Supported types: "
+                ".csv, .json, .txt, .log"
+            )
+
+    # ========================================================
+    # CSV ANALYSIS
+    # ========================================================
+
+    def _analyze_csv(self):
+        """
+        Analyze a CSV file.
+
+        Reports:
+            Number of data rows
+            Number of columns
+            Column headers
+            Inconsistent row lengths
+
+        Week 5 hardening is retained through:
+            PermissionError handling
+            OSError handling
+            CSV structure validation
+        """
+
+        try:
+            with open(
+                self.filepath,
+                "r",
+                encoding="utf-8",
+                newline=""
+            ) as file:
+
+                reader = csv.reader(file)
+                rows = list(reader)
+
+        except PermissionError:
+            print(
+                "Cannot read this file, permission denied: "
+                f"{self.filepath}"
+            )
+            return
+
+        except OSError as error:
+            print(f"Could not read the CSV file: {error}")
+            return
+
+        # ----------------------------------------------------
+        # EMPTY CSV CHECK
+        # ----------------------------------------------------
+
+        if not rows:
+            print("This CSV file is empty. No headers, no rows.")
+            return
+
+        # The first row is treated as the header.
+        headers = rows[0]
+
+        # Everything after the header is data.
+        data_rows = rows[1:]
+
+        # A tuple represents the measured shape of the file.
+        # It is not intended to change after being calculated.
+        file_shape = (
+            len(data_rows),
+            len(headers)
+        )
+
+        print("File type: CSV")
+        print(f"Rows: {file_shape[0]}")
+        print(f"Columns: {file_shape[1]}")
+        print(f"Headers: {headers}")
+
+        # ----------------------------------------------------
+        # CSV STRUCTURE VALIDATION
+        # ----------------------------------------------------
+
+        mismatched = [
+            (line_number, len(row))
+            for line_number, row in enumerate(
+                data_rows,
+                start=2
+            )
+            if len(row) != len(headers)
+        ]
+
+        if mismatched:
+            print(
+                f"Warning: {len(mismatched)} row(s) have a "
+                "different column count than the header:"
+            )
+
+            for line_number, column_count in mismatched:
+                print(
+                    f"  Row at line {line_number}: "
+                    f"{column_count} columns "
+                    f"(expected {len(headers)})"
+                )
+
+        else:
+            print("CSV structure looks consistent.")
+
+    # ========================================================
+    # JSON ANALYSIS
+    # ========================================================
+
+    def _analyze_json(self):
+        """
+        Analyze the structure of a JSON file.
+
+        Identifies whether the top-level value is:
+            list
+            dictionary
+            single value
+
+        Handles:
+            Empty files
+            Invalid JSON
+            Permission errors
+            Other file reading errors
+        """
+
+        try:
+            with open(
+                self.filepath,
+                "r",
+                encoding="utf-8"
+            ) as file:
+
+                raw_text = file.read()
+
+        except PermissionError:
+            print(
+                "Cannot read this file, permission denied: "
+                f"{self.filepath}"
+            )
+            return
+
+        except OSError as error:
+            print(f"Could not read the JSON file: {error}")
+            return
+
+        # ----------------------------------------------------
+        # EMPTY JSON CHECK
+        # ----------------------------------------------------
+
+        if not raw_text.strip():
+            print("This JSON file is empty.")
+            return
+
+        # ----------------------------------------------------
+        # JSON PARSING
+        # ----------------------------------------------------
+
+        try:
+            data = json.loads(raw_text)
+
+        except json.JSONDecodeError as error:
+            print(
+                "This JSON file is broken and could not be read."
+            )
+            print(f"Reason: {error}")
+            return
+
+        # ----------------------------------------------------
+        # JSON LIST
+        # ----------------------------------------------------
+
+        if isinstance(data, list):
+
+            print("File type: JSON (list)")
+            print(f"Total items: {len(data)}")
+
+            if data:
+                print(
+                    "First item type: "
+                    f"{type(data[0]).__name__}"
+                )
+
+                if isinstance(data[0], dict):
+                    print(
+                        "Keys in first item: "
+                        f"{list(data[0].keys())}"
+                    )
+
+        # ----------------------------------------------------
+        # JSON DICTIONARY
+        # ----------------------------------------------------
+
+        elif isinstance(data, dict):
+
+            print("File type: JSON (dictionary)")
+            print(
+                f"Top-level keys: {list(data.keys())}"
+            )
+
+        # ----------------------------------------------------
+        # JSON SINGLE VALUE
+        # ----------------------------------------------------
+
+        else:
+
+            print(
+                "File type: JSON "
+                f"(single value: {type(data).__name__})"
+            )
+
+    # ========================================================
+    # TEXT / LOG ANALYSIS
+    # ========================================================
+
+    def _analyze_text(self):
+        """
+        Analyze a TXT or LOG file.
+
+        Reports:
+            Total number of lines
+            Number of suspicious lines
+            Suspicious words found on each matching line
+
+        Suspicious keyword matching uses SET intersection.
+        """
+
+        try:
+            with open(
+                self.filepath,
+                "r",
+                encoding="utf-8",
+                errors="ignore"
+            ) as file:
+
+                lines = file.readlines()
+
+        except PermissionError:
+            print(
+                "Cannot read this file, permission denied: "
+                f"{self.filepath}"
+            )
+            return
+
+        except OSError as error:
+            print(
+                f"Could not read the text/log file: {error}"
+            )
+            return
+
+        # ----------------------------------------------------
+        # EMPTY TEXT/LOG CHECK
+        # ----------------------------------------------------
+
+        if not lines:
+            print("This text/log file is empty.")
+            return
+
+        print("File type: TEXT/LOG")
+        print(f"Total lines: {len(lines)}")
+
+        # Dictionary:
+        #
+        #     line number -> suspicious words
+        #
+        # Example:
+        #
+        #     {
+        #         2: ["timeout"],
+        #         5: ["error", "failed"]
+        #     }
+
+        findings = {}
+
+        # ----------------------------------------------------
+        # SCAN EACH LINE
+        # ----------------------------------------------------
+
+        for line_number, line in enumerate(
+            lines,
+            start=1
+        ):
+
+            # Convert the line into a SET of words.
+            #
+            # lower() makes keyword matching case-insensitive.
+
+            words_in_line = set(
+                line.lower().split()
+            )
+
+            # Set intersection returns words that appear in
+            # both the current line and SUSPICIOUS_WORDS.
+
+            matches = words_in_line & SUSPICIOUS_WORDS
+
+            if matches:
+                # sorted() makes the output predictable.
+                findings[line_number] = sorted(matches)
+
+        # ----------------------------------------------------
+        # NO FINDINGS
+        # ----------------------------------------------------
+
+        if not findings:
+            print("No suspicious words found.")
+            return
+
+        # ----------------------------------------------------
+        # DISPLAY FINDINGS
+        # ----------------------------------------------------
+
+        print(
+            f"Suspicious lines found: {len(findings)}"
+        )
+
+        for line_number, matches in findings.items():
+            print(
+                f"  Line {line_number}: {matches}"
+            )
 
 
-# ── JSON HANDLING ────────────────────────────────────────────
-def analyze_json(filepath):
-    """
-    Reads a JSON file and reports whether the top-level data is a
-    list or a dictionary, plus some basic shape details.
+# ============================================================
+# COMMAND LINE ENTRY POINT
+# ============================================================
 
-    JSON files are easy to break by hand (a missing comma, a missing
-    bracket) so this function has to handle that gracefully instead
-    of letting the whole program crash.
-    """
-    with open(filepath, "r", encoding="utf-8") as f:
-        raw_text = f.read()
-
-    if not raw_text.strip():
-        print("This JSON file is empty.")
-        return
-
-    try:
-        data = json.loads(raw_text)
-    except json.JSONDecodeError as e:
-        # This is the "broken JSON" case from the notes — catch it,
-        # explain what went wrong, and stop cleanly instead of
-        # crashing the whole program.
-        print("This JSON file is broken and could not be read.")
-        print(f"Reason: {e}")
-        return
-
-    if isinstance(data, list):
-        print(f"File type: JSON (list)")
-        print(f"Total items: {len(data)}")
-        if data:
-            print(f"First item type: {type(data[0]).__name__}")
-            # If the list is full of dictionaries, show what keys
-            # the first one has — useful for a quick shape check.
-            if isinstance(data[0], dict):
-                print(f"Keys in first item: {list(data[0].keys())}")
-
-    elif isinstance(data, dict):
-        print(f"File type: JSON (dictionary)")
-        print(f"Top-level keys: {list(data.keys())}")
-
-    else:
-        print(f"File type: JSON (single value: {type(data).__name__})")
-
-
-# ── TEXT / LOG HANDLING ──────────────────────────────────────
-def analyze_text(filepath):
-    """
-    Reads a text or log file, counts the lines, and scans each line
-    for suspicious keywords using the SUSPICIOUS_WORDS set.
-    """
-    with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
-        lines = f.readlines()
-
-    if not lines:
-        print("This text/log file is empty.")
-        return
-
-    print(f"File type: TEXT/LOG")
-    print(f"Total lines: {len(lines)}")
-
-    # A DICTIONARY to collect findings: line number -> list of words found.
-    # This is exactly the "nested data" idea from the notes — a dict
-    # that contains, per line, a list of matches.
-    findings = {}
-
-    for line_number, line in enumerate(lines, start=1):
-        words_in_line = set(line.lower().split())  # a SET of this line's words
-
-        # & gives us only the words that appear in BOTH sets —
-        # i.e. the suspicious words actually present on this line.
-        matches = words_in_line & SUSPICIOUS_WORDS
-
-        if matches:
-            findings[line_number] = list(matches)
-
-    if not findings:
-        print("No suspicious words found.")
-        return
-
-    print(f"Suspicious lines found: {len(findings)}")
-    for line_number, matches in findings.items():
-        print(f"  Line {line_number}: {matches}")
-
-
-# ── FILE TYPE ROUTER ─────────────────────────────────────────
-def detect_and_analyze(filepath):
-    """
-    Looks at the file's extension and sends it to the right analyzer.
-    Handles the "no extension at all" case cleanly instead of guessing.
-    """
-    if not os.path.exists(filepath):
-        print(f"File not found: {filepath}")
-        return
-
-    _, extension = os.path.splitext(filepath)
-    extension = extension.lower()
-
-    if extension == ".csv":
-        analyze_csv(filepath)
-    elif extension == ".json":
-        analyze_json(filepath)
-    elif extension in (".txt", ".log"):
-        analyze_text(filepath)
-    else:
-        print(f"Unrecognized or missing file extension: '{extension or '(none)'}'")
-        print("Supported types: .csv, .json, .txt, .log")
-
-
-# ── ENTRY POINT ───────────────────────────────────────────────
 def main():
+    """
+    Start SentinelCLI from the command line.
+
+    SentinelCLI expects exactly one argument:
+    the path to the file being inspected.
+    """
+
     if len(sys.argv) != 2:
-        print("Usage: python sentinel.py <path-to-file>")
+        print(
+            "Usage: "
+            "python sentinel.py <path-to-file>"
+        )
         sys.exit(1)
 
     filepath = sys.argv[1]
-    detect_and_analyze(filepath)
 
+    # Create an object from the FileInspector class.
+    inspector = FileInspector(filepath)
+
+    # Ask the object to analyze its own file.
+    inspector.analyze()
+
+
+# ============================================================
+# PROGRAM START
+# ============================================================
 
 if __name__ == "__main__":
     main()

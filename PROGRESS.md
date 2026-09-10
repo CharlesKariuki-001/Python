@@ -54,6 +54,15 @@ Ship target: Weeks 1–4 hardened (no new project this week)
 - [x] `sentinel.py` (Week 4) extended — PermissionError handling, CSV row/header mismatch warning
 - [ ] Comprehension Log entry — deferred, handled separately alongside VigilantAI work
 
+## Week 6 (Oct 19–25) — Object Oriented Programming
+Theme: OOP
+Ship target: SentinelCLI refactor
+- [x] `notes.md` written — classes, objects, self, __init__, inheritance overview
+- [x] `practice.py` completed — Transaction, Counter, RiskChecker, RunningTotal, SimpleFileInspector
+- [x] `sentinel.py` refactored into a `FileInspector` class
+- [x] Verified identical behavior against all Week 4/5 sample files
+- [x] README updated with refactor note
+
 
 | Week | Theme | Status |
 |---|---|---|
@@ -63,4 +72,5 @@ Ship target: Weeks 1–4 hardened (no new project this week)
 | 3 | Functions | Built and hardened |
 | 4 | Collections — SentinelCLI | Complete and shipped |
 | 5 | Errors, exceptions, debugging | Complete |
+| 6 | OOP — SentinelCLI refactor | Complete |
 ---

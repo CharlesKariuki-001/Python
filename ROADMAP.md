@@ -1,103 +1,17 @@
-<div align="center">
+# 180-Day Roadmap
 
-# Python
+Corrected 4-Month timetable — Sept 9 to Dec 31, 2026.
 
-### 180 Day Build Log
+## Phase 1 — Foundations (Weeks 1–8)
+Variables → conditions → functions → collections → errors → OOP → modules → Git/testing
 
-<em>A public record of learning Python from zero and turning it into real, working systems: data tools, security scanners, and deep comprehension work on a live AI product I already built and shipped.</em>
+## Phase 2 — Data (Weeks 9–12)
+NumPy → Pandas → visualization/stats → probability/linear algebra
 
-<br>
+## Phase 3 — ML Lifecycle, Never Rebuilding VigilantAI (Weeks 13–16)
+Toy ML classifier → hardening pass on real VigilantAI → explanation audit → panel-ready polish
 
-![Last Commit](https://img.shields.io/github/last-commit/CharlesKariuki-001/Python?style=for-the-badge&color=00ADB5&labelColor=222831)
-![Commit Activity](https://img.shields.io/github/commit-activity/w/CharlesKariuki-001/Python?style=for-the-badge&color=00ADB5&labelColor=222831)
-![Repo Size](https://img.shields.io/github/repo-size/CharlesKariuki-001/Python?style=for-the-badge&color=00ADB5&labelColor=222831)
-![Python](https://img.shields.io/badge/Python-3.x-00ADB5?style=for-the-badge&logo=python&logoColor=white&labelColor=222831)
-![Status](https://img.shields.io/badge/Status-Actively%20Building-brightgreen?style=for-the-badge&labelColor=222831)
-![License](https://img.shields.io/github/license/CharlesKariuki-001/Python?style=for-the-badge&color=00ADB5&labelColor=222831)
+## Phase 5 — Next Semester
+`africandr` (NDR) starts Week 17. `ai-security-engineering` starts Week 19.
 
-</div>
-
-<br>
-
-## What This Is
-
-This repository is a public, ongoing record of a 180 day journey from an empty Python file to real engineering skill. Every entry here is something that actually runs, something I deliberately tried to break, and something I learned from. Not a tutorial copy, not a certificate screenshot. Real code, real bugs, real fixes.
-
-The mission is simple. By the end of this journey I should be able to open a blank file and build something that works, understand exactly why it works, and know how to make it fail on purpose so I understand its limits.
-
-<br>
-
-## The Method
-
-Every build in this repository follows the same four step cycle, without exception.
-
-**Learn** a concept in small, focused pieces rather than everything at once.
-
-**Build** something small and real with that concept, never just a syntax exercise.
-
-**Break** the thing on purpose. Feed it bad input, missing data, impossible numbers, and watch what happens. A tool I never tried to break is a tool I do not actually understand yet.
-
-**Ship** it publicly with a clear explanation of what it does and what breaking it taught me.
-
-<br>
-
-## What I'm Building Toward
-
-This repository moves through six major phases, each one built on top of the last.
-
-**Python Foundations** — going from a blank file to confident, clean, working code. Variables, control flow, functions, data structures, and the first real command line tools.
-
-**Intermediate Engineering** — file handling, error handling, object oriented design, and a reusable Python library built from scratch.
-
-**Data and Mathematics** — NumPy, Pandas, visualization, and just enough statistics, probability, and linear algebra to understand what is actually happening inside a machine learning model.
-
-**AI and Machine Learning Engineering** — training and evaluating a classifier honestly, on a fresh problem, then applying that understanding directly to a real system I already built, reading it, testing it, and proving I can explain every decision it makes.
-
-**Cybersecurity and AI Security** — thinking like both an attacker and a defender. Secure coding, threat modeling, and adversarial testing, extending into two dedicated projects: a network security system and an AI security toolkit.
-
-**Production and Systems** — deploying new tools with Docker, and closing the loop with a final report that ties every phase together across every project I have running.
-
-<br>
-
-## How This Connects
-
-This repository is the workshop, not the whole picture. General skills are learned and built here, one week at a time.
-
-Vigilant AI is a separate, already built and deployed product: an AI powered fraud detection system. It is not rebuilt inside this repository. Instead, this repo holds a weekly comprehension log, where I explain one real piece of it in my own words, and any hardening work (adversarial testing, security review) lives directly inside its own repository.
-
-Two more projects open later in this journey. A network security system and an AI security toolkit, each with its own repository, each starting only once the roadmap reaches that phase.
-
-<br>
-
-## Tech and Tools
-
-<div align="center">
-
-![Python](https://img.shields.io/badge/Python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
-![VS Code](https://img.shields.io/badge/VS%20Code-0078D4?style=for-the-badge&logo=visualstudiocode&logoColor=white)
-![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
-![scikit learn](https://img.shields.io/badge/scikit%20learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-
-</div>
-
-<br>
-
-## The One Rule That Matters
-
-If something takes longer than planned, that is not failure, that is normal engineering. What actually matters is never skipping the step where I try to break my own work. A project I never attempted to break is a project I do not truly understand.
-
-<br>
-
-<div align="center">
-
-### Following the Python Forge 180 day roadmap
-
-<em>Built one small, breakable piece at a time.</em>
-
-![Profile Views](https://komarev.com/ghpvc/?username=CharlesKariuki-001&style=for-the-badge&color=00ADB5&label=REPO+VIEWS)
-
-</div>
+Full detail lives in the 4-Month Grind (Corrected) document.

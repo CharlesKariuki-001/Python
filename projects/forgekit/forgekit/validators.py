@@ -1,12 +1,12 @@
 """Validation utilities — functions that check whether something meets a rule."""
 
 
-def is_positive(number):
+def is_positive(number: float) -> bool:
     """Returns True if number is greater than zero."""
     return number > 0
 
 
-def is_valid_email(text):
+def is_valid_email(text: str) -> bool:
     """
     A simple, intentionally basic email check. Real email validation
     is more complex than this; this is good enough for a quick sanity
@@ -17,6 +17,6 @@ def is_valid_email(text):
     return "@" in text and "." in text.split("@")[-1]
 
 
-def is_non_empty_string(value):
+def is_non_empty_string(value: str) -> bool:
     """Returns True if value is a string with actual content, not just whitespace."""
     return isinstance(value, str) and value.strip() != ""

@@ -74,6 +74,16 @@ Ship target: `projects/forgekit/`
 - [x] All 6 tests passing
 - [x] README written
 
+## Week 8 (Nov 2–8) — Git, Testing, Type Hints
+Theme: Git, testing, type hints
+Ship target: ForgeKit + SentinelCLI tests
+- [x] `notes.md` written — type hints, proper test design (normal/edge/failure cases), pytest.raises, Git practices
+- [x] `practice.py` completed
+- [x] Type hints added across all ForgeKit functions (validators, formatters, file_tools)
+- [x] ForgeKit test suite expanded from 6 to 20 tests — normal, edge, and failure cases per function
+- [x] SentinelCLI given its first real test suite — 8 tests covering CSV, JSON, text/log, and all break-it cases
+- [x] All 28 tests passing across both projects
+
 
 | Week | Theme | Status |
 |---|---|---|
@@ -85,4 +95,5 @@ Ship target: `projects/forgekit/`
 | 5 | Errors, exceptions, debugging | Complete |
 | 6 | OOP — SentinelCLI refactor | Complete |
 | 7 | Modules, packages, venv — ForgeKit | Complete |
+| 8 | Git, testing, type hints | Complete — 28 tests passing |
 ---

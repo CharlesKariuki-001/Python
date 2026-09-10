@@ -1,44 +1,352 @@
+<<<<<<< HEAD
 # Week 4 Notes
+=======
+# Week 4 Notes: Collections
+>>>>>>> 4f98387 (feat: harden Weeks 1-4 with exception handling and input validation (Week 5))
 
-## What I learned today
+## What I Learned Today
 
-Today was about collections. This is how Python stores groups of data instead of just one value at a time.
+Today was about **collections**, the different ways Python stores more than one value at a time.
 
-Lists are ordered groups of items. You can have duplicates and you get items back by their position, starting from zero.
+Before this week, I was mostly thinking about one value in one variable. Real programs rarely work that way. They process groups of data such as rows, records, log lines, keywords, and API responses.
 
-Dictionaries store data with labels. Instead of asking for "the third item", you ask for "the value under this name". I also learned that using .get() on a dictionary is safer than using square brackets, because it won't crash the program if the label doesn't exist.
+Python provides several collection types, and each one is designed for a different problem.
 
-Tuples are basically lists that can never be changed once created. I understood why that matters: sometimes you want to guarantee a value stays exactly as it was, like a coordinate or a fixed date.
+## Lists
 
-Sets are groups of items where nothing repeats and order doesn't matter. What surprised me was how useful they are for checking if something is present, and how you can compare two sets directly using symbols like & for what they share, | for everything combined, and minus for what is only in one of them.
+A list is an **ordered and changeable** collection that allows duplicates.
 
-Comprehensions were the trickiest part. It's basically a shortcut for writing a loop that builds a new list in one line. It took me a bit to read them comfortably, but I understand now that they are just a shorter way to say the same thing a normal loop would do.
+Each item has a position called an index. Indexing starts at `0`, not `1`.
 
-Nested data was the part that connected everything. Most real data isn't just one list or one dictionary, it's a mix, like a dictionary that contains a list, and that list contains more dictionaries inside it. That is exactly how data looks when it comes from a real file or a website.
+```python
+suspicious_words = ["error", "failed", "unauthorized", "error"]
 
-## What I built
+print(suspicious_words[0])
+# error
+```
 
-I built SentinelCLI. It's a small tool you run from the terminal, and you give it a file. If it's a CSV file it tells you how many rows and columns it has and what the headers are. If it's a JSON file it tells you if the data is a list or a dictionary and gives basic details about it. If it's a text or log file, it counts the lines and checks each one for suspicious words like error, failed, unauthorized, attack, and a few others, using a set to make that check fast.
+Use a list when order matters and the collection may need to change.
 
-## Breaking it on purpose
+Lists are useful for things such as CSV rows, log lines, and groups of results.
 
-I tested it against an empty file and it gave a clear message instead of crashing.
+## Dictionaries
 
-I tested it against a broken JSON file with a missing character and it caught the problem and explained what went wrong instead of crashing the whole program.
+A dictionary stores information using **keys and values**.
 
-I tested it against a very large file to see how it handled size.
+Instead of asking for an item by its position, you ask for it using a meaningful label.
 
-I tested it against a file with no file extension at all.
+```python
+row_info = {
+    "rows": 120,
+    "columns": 5
+}
 
-What I actually saw when I ran each of these:
-_(fill this part in yourself with the real output you saw)_
+print(row_info["rows"])
+# 120
+```
 
-## Why this actually matters in real life
+One important lesson was the difference between square bracket access and `.get()`.
 
-This is basically a tiny version of what real security and data tools do every day. Companies scan through huge log files looking for the same kind of warning signs I was looking for, just with way more rules and way more data. The set trick I used to catch suspicious words is the same basic idea behind real alert systems, because checking if something belongs to a group needs to be fast when you're dealing with millions of lines.
+Using:
 
-The part where I checked the shape of a file before trusting it, like counting columns or checking if something is a list or a dictionary, is something real systems do constantly before they process any data. If the shape looks wrong, they stop and flag it instead of blindly continuing.
+```python
+row_info["missing_key"]
+```
 
-The part where my program caught a broken file instead of crashing completely is a small preview of something bigger I'll learn soon, which is how real software handles bad input gracefully instead of just falling apart.
+causes an error when the key does not exist.
 
-And honestly, the biggest thing this taught me is that a project only feels real once someone else could pick it up, read the readme, run one command, and understand what it does without me explaining anything. That's the actual standard I'm building toward.
+Using:
+
+```python
+print(row_info.get("missing_key"))
+# None
+
+print(row_info.get("missing_key", 0))
+# 0
+```
+
+allows the program to provide a safe fallback.
+
+This matters in real software because input data cannot always be assumed to contain every key we expect.
+
+## Tuples
+
+A tuple is similar to a list, but it **cannot be changed after it is created**.
+
+```python
+file_shape = (120, 5)
+```
+
+Here the values represent rows and columns.
+
+Tuples are useful when information should remain fixed. Examples include coordinates, fixed configuration values, or data that should not accidentally be modified later.
+
+The important idea is that a tuple provides a level of protection against accidental changes.
+
+## Sets
+
+A set is a collection of **unique values where order is not the main concern**.
+
+Sets are especially useful for membership testing and comparing groups of values.
+
+```python
+suspicious_words = {
+    "error",
+    "failed",
+    "unauthorized",
+    "attack"
+}
+
+found_words = {
+    "login",
+    "error",
+    "success"
+}
+
+print(suspicious_words & found_words)
+# {'error'}
+```
+
+The `&` operator finds the intersection, meaning the values shared by both sets.
+
+Other useful set operations include:
+
+```text
+&    intersection
+|    union
+−    difference
+```
+
+The membership operation is also efficient:
+
+```python
+if word in suspicious_words:
+    print("Suspicious word found")
+```
+
+This is why sets were useful in SentinelCLI when checking log lines against a collection of suspicious keywords.
+
+## Comprehensions
+
+A comprehension is a concise way of creating a new collection from an existing one.
+
+The normal approach is:
+
+```python
+squares = []
+
+for n in range(5):
+    squares.append(n * n)
+```
+
+The same operation can be written as:
+
+```python
+squares = [n * n for n in range(5)]
+```
+
+The pattern:
+
+```python
+[expression for item in collection]
+```
+
+can be understood as:
+
+> For each item, perform this operation and collect the results.
+
+At first comprehensions were difficult to read, but understanding them as compressed loops made them much easier to understand.
+
+I also learned that shorter code is not automatically better code. If a normal loop is clearer, I would rather use the normal loop.
+
+## Nested Data
+
+Real data is usually more complicated than one simple list or dictionary.
+
+Collections can contain other collections.
+
+For example:
+
+```python
+file_report = {
+    "filename": "log.txt",
+    "issues": [
+        {"line": 12, "word": "unauthorized"},
+        {"line": 45, "word": "failed"}
+    ]
+}
+```
+
+To access the first suspicious word:
+
+```python
+file_report["issues"][0]["word"]
+```
+
+This produces:
+
+```text
+unauthorized
+```
+
+Nested structures are common when working with JSON files, APIs, databases, and other real world data sources.
+
+## What I Built: SentinelCLI
+
+I built **SentinelCLI**, a small Python command line tool that inspects files and reports what is inside them.
+
+For CSV files it reports:
+
+```text
+Row count
+Column count
+Headers
+```
+
+For JSON files it reports:
+
+```text
+Whether the data is a list or dictionary
+Number of items when applicable
+Type of the first item
+Keys in the first item when applicable
+```
+
+For TXT and log files it reports:
+
+```text
+Total number of lines
+Number of suspicious lines
+Suspicious keywords found on each matching line
+```
+
+The suspicious keyword set contains:
+
+```text
+error
+failed
+unauthorized
+attack
+denied
+breach
+malware
+timeout
+```
+
+This project gave me a practical reason to use the collections I had just learned.
+
+## Breaking It on Purpose
+
+I deliberately tested SentinelCLI with unexpected input to see how it behaved.
+
+### Empty File
+
+Command:
+
+```text
+python sentinel.py samples/empty_file.txt
+```
+
+Output:
+
+```text
+This text/log file is empty.
+```
+
+The program checks whether the file contains content before processing it, so an empty file produces a clear message instead of causing a crash.
+
+### Malformed JSON
+
+Command:
+
+```text
+python sentinel.py samples/malformed.json
+```
+
+Output:
+
+```text
+This JSON file is broken and could not be read.
+Reason: Expecting ',' delimiter: line 4 column 1 (char 119)
+```
+
+The JSON file was missing its closing structure.
+
+Python's JSON parser detected the problem and reported where it became confused.
+
+My code catches that error with `try` and `except` and gives the user a clear explanation instead of exposing a raw traceback.
+
+The useful part is that the error contains a specific location:
+
+```text
+line 4 column 1
+```
+
+That gives the person fixing the file somewhere specific to investigate.
+
+### File With No Extension
+
+Command:
+
+```text
+python sentinel.py samples/no_extension_file
+```
+
+Output:
+
+```text
+Unrecognized or missing file extension: '(none)'
+Supported types: .csv, .json, .txt, .log
+```
+
+Instead of guessing the file type, the program checks the extension and clearly tells the user when it does not recognize it.
+
+## Why This Matters
+
+SentinelCLI is small, but the ideas behind it appear in real software.
+
+Security and data systems regularly process large amounts of information and need to understand the structure of that information before doing anything with it.
+
+Checking whether a value belongs to a collection is a basic operation that becomes important when processing large amounts of data.
+
+Checking file structure before processing it is another practical engineering habit. If the input does not have the expected shape, a system should handle that situation deliberately rather than blindly continuing.
+
+The malformed JSON test also introduced an important software engineering principle:
+
+> Good software should expect bad input and handle it gracefully.
+
+Instead of simply crashing, SentinelCLI explains what went wrong and, when possible, gives useful information about where the problem occurred.
+
+## Main Lessons
+
+The biggest lessons from Week 4 were:
+
+```text
+Lists are useful for ordered, changeable collections.
+
+Dictionaries are useful for labelled data.
+
+Tuples are useful for values that should remain fixed.
+
+Sets are useful for unique values, membership testing, and set operations.
+
+Comprehensions provide concise ways to build collections.
+
+Nested collections represent the structure of real world data.
+
+Defensive programming makes software more reliable when input is unexpected.
+```
+
+Most importantly, I learned that programming concepts become easier to understand when they are used to solve an actual problem.
+
+SentinelCLI turned collections from something I was only studying into something I could use in a working program.
+
+## Final Reflection
+
+The project also changed how I think about what makes a project useful.
+
+A project starts to feel real when another person can clone the repository, read the documentation, run one command, and understand what the program does without needing me to explain it.
+
+That is the standard I want to keep building toward throughout the Python Forge 180 Day journey.
+
+**Learn the concept. Build something with it. Break it. Understand why it broke. Improve it. Ship it.**
